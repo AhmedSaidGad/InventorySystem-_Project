@@ -1,0 +1,43 @@
+﻿@model InventorySystem.ViewModels.PurchaseViewModel
+
+@{
+    ViewData["Title"] = "Edit Purchase";
+}
+
+<h2>Edit Purchase</h2>
+
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="PurchaseID" />
+
+    <div class="form-group">
+        <label asp-for="SupplierID" class="control-label"></label>
+        <select asp-for="SupplierID" class="form-control" asp-items="ViewBag.SupplierList">
+            <option value="">-- Select Supplier --</option>
+        </select>
+        <span asp-validation-for="SupplierID" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PurchaseDate" class="control-label"></label>
+        <input asp-for="PurchaseDate" class="form-control" type="date" />
+        <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TotalAmount" class="control-label"></label>
+        <input asp-for="TotalAmount" class="form-control" />
+        <span asp-validation-for="TotalAmount" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

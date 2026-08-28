@@ -1,0 +1,166 @@
+﻿@{
+    ViewData["Title"] = "Home - Inventory System";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="hero">
+    <h1>🚀 Welcome to Inventory System</h1>
+    <p>Manage your products, suppliers, purchases, and sales — all in one place.</p>
+    <a href="/Dashboard" class="btn-hero">📊 Go to Dashboard</a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card"><h3>@ViewBag.TotalProducts</h3><p>📦 Products</p></div>
+    <div class="stat-card"><h3>@ViewBag.TotalCategories</h3><p>📂 Categories</p></div>
+    <div class="stat-card"><h3>@ViewBag.TotalSuppliers</h3><p>🏢 Suppliers</p></div>
+    <div class="stat-card"><h3>@ViewBag.TotalStock</h3><p>📊 Total Stock</p></div>
+</div>
+
+<div class="features">
+    <div class="feature-item"><i class="fas fa-boxes"></i><h4>Product Management</h4><p>Add, edit, delete and browse products with ease.</p></div>
+    <div class="feature-item"><i class="fas fa-truck"></i><h4>Supplier Management</h4><p>Manage suppliers and track their contact info.</p></div>
+    <div class="feature-item"><i class="fas fa-shopping-cart"></i><h4>Purchase & Sales</h4><p>Create purchase orders and sales invoices instantly.</p></div>
+    <div class="feature-item"><i class="fas fa-chart-line"></i><h4>Analytics Dashboard</h4><p>Visualize your business stats and low stock alerts.</p></div>
+</div>
+
+<style>
+    .hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        border-radius: 20px;
+        margin-top: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .hero .btn-hero {
+            background: white;
+            color: #764ba2;
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+            .hero .btn-hero:hover {
+                transform: scale(1.05);
+                background: #f0f0f0;
+            }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 25px;
+        margin-top: 40px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 25px 15px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+        transition: all 0.3s;
+        border-bottom: 4px solid #667eea;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+        }
+
+        .stat-card h3 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #333;
+            margin: 0;
+        }
+
+        .stat-card p {
+            color: #777;
+            margin: 5px 0 0;
+            font-weight: 500;
+        }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+
+    .feature-item {
+        background: white;
+        padding: 25px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+        transition: 0.3s;
+    }
+
+        .feature-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+        }
+
+        .feature-item i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .feature-item h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .feature-item p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+    @@media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.2rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const heroTitle = document.querySelector('.hero h1');
+        if (!heroTitle) return;
+        const originalText = heroTitle.textContent;
+        heroTitle.textContent = '';
+        let index = 0;
+        function typeWriter() {
+            if (index < originalText.length) {
+                heroTitle.textContent += originalText.charAt(index);
+                index++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+        setTimeout(typeWriter, 300);
+    });
+</script>

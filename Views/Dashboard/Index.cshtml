@@ -1,0 +1,554 @@
+﻿@using InventorySystem.ViewModels
+@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+        .admin-header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin: 0;
+        }
+
+        .admin-header .badge-admin {
+            background: #764ba2;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+    .cards-circle-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        margin: 40px 0;
+    }
+
+    .circle-card {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 3px solid transparent;
+        padding: 20px;
+    }
+
+        .circle-card:hover {
+            transform: scale(1.05);
+            border-color: #667eea;
+            box-shadow: 0 25px 50px rgba(102,126,234,0.25);
+        }
+
+        .circle-card .icon {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+
+        .circle-card .number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1a1a2e;
+        }
+
+        .circle-card .label {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .circle-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+    .trend.up {
+        color: #28a745;
+    }
+
+    .trend.down {
+        color: #dc3545;
+    }
+
+    .circle-card.c1 {
+        background: linear-gradient(135deg, #f8f9ff, #e8ecff);
+    }
+
+    .circle-card.c2 {
+        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    }
+
+    .circle-card.c3 {
+        background: linear-gradient(135deg, #fdf4f6, #fce4ec);
+    }
+
+    .circle-card.c4 {
+        background: linear-gradient(135deg, #fff7ed, #ffedd5);
+    }
+
+    .row-dashboard {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+        margin: 40px 0;
+    }
+
+    .col-half {
+        flex: 1 1 calc(50% - 12px);
+        min-width: 300px;
+        background: white;
+        border-radius: 25px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+        .col-half h3 {
+            margin-top: 0;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+    #revenueChart {
+        max-height: 150px;
+        width: 100% !important;
+    }
+
+    .revenue-stats {
+        display: flex;
+        justify-content: space-around;
+        margin: 20px 0;
+    }
+
+        .revenue-stats .label {
+            display: block;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .revenue-stats .value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+    .segments-list {
+        list-style: none;
+        padding: 0;
+    }
+
+        .segments-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f1f1;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+            .segments-list li:last-child {
+                border-bottom: none;
+            }
+
+    .dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 12px;
+    }
+
+        .dot.alpha {
+            background: #4facfe;
+        }
+
+        .dot.beta {
+            background: #43e97b;
+        }
+
+        .dot.gamma {
+            background: #f093fb;
+        }
+
+        .dot.delta {
+            background: #f5576c;
+        }
+
+    .orders-section {
+        background: white;
+        border-radius: 25px;
+        padding: 25px;
+        margin-top: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .orders-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .orders-table th {
+            text-align: left;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .orders-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+    .status {
+        padding: 4px 14px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+        .status.processing {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+    .quick-actions {
+        background: white;
+        border-radius: 25px;
+        padding: 30px;
+        margin: 40px 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+    }
+
+    .action-btn {
+        padding: 14px 18px;
+        border-radius: 50px;
+        color: white !important;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none !important;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border: none;
+    }
+
+        .action-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            color: white !important;
+            opacity: 0.9;
+        }
+
+        .action-btn i {
+            font-size: 1.2rem;
+        }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+        .section-header h3 {
+            margin: 0;
+        }
+
+    .view-all-link {
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .view-all-link i {
+            font-size: 0.9rem;
+        }
+
+    @@media (max-width: 768px) {
+        .circle-card {
+            width: 140px;
+            height: 140px;
+        }
+
+            .circle-card .number {
+                font-size: 1.6rem;
+            }
+
+            .circle-card .icon {
+                font-size: 2rem;
+            }
+
+        .col-half {
+            flex: 1 1 100%;
+        }
+    }
+</style>
+
+<!-- Header -->
+<div class="admin-header">
+    <div>
+        <h1>📊 Admin Dashboard</h1>
+        <p style="color:#6c757d; margin:0;">Sales overview & summary</p>
+    </div>
+    <span class="badge-admin">🔑 Admin Access</span>
+</div>
+
+<!-- Circular Cards -->
+<div class="cards-circle-container">
+    <div class="circle-card c1">
+        <div class="icon">📦</div>
+        <div class="number">@Model.TotalProducts</div>
+        <div class="label">Products</div>
+        <span class="trend up">↑ 3%</span>
+    </div>
+    <div class="circle-card c2">
+        <div class="icon">📂</div>
+        <div class="number">@Model.TotalCategories</div>
+        <div class="label">Categories</div>
+        <span class="trend up">↑ 2%</span>
+    </div>
+    <div class="circle-card c3">
+        <div class="icon">🏢</div>
+        <div class="number">@Model.TotalSuppliers</div>
+        <div class="label">Suppliers</div>
+        <span class="trend up">↑ 5%</span>
+    </div>
+    <div class="circle-card c4">
+        <div class="icon">📊</div>
+        <div class="number">@Model.TotalStockQuantity</div>
+        <div class="label">Total Stock</div>
+        <span class="trend down">↓ 1%</span>
+    </div>
+</div>
+
+
+<div class="quick-actions">
+    <h3 style="margin-bottom: 20px; font-weight: 700; color: #1a1a2e;">⚡ Quick Admin Actions</h3>
+    <div class="actions-grid">
+        <a href="/Products/Create" class="action-btn" style="background: #4facfe;"><i class="fas fa-plus-circle"></i> Add Product</a>
+        <a href="/Categories/Create" class="action-btn" style="background: #43e97b;"><i class="fas fa-tag"></i> Add Category</a>
+        <a href="/Suppliers/Create" class="action-btn" style="background: #f093fb;"><i class="fas fa-truck"></i> Add Supplier</a>
+        <a href="/Purchases/Create" class="action-btn" style="background: #f5576c;"><i class="fas fa-shopping-cart"></i> New Purchase</a>
+        <a href="/Sales/Create" class="action-btn" style="background: #ffa502;"><i class="fas fa-file-invoice"></i> New Sale</a>
+        <a href="/Products" class="action-btn" style="background: #2d3436;"><i class="fas fa-boxes"></i> Manage Products</a>
+        <a href="/Categories" class="action-btn" style="background: #6c5ce7;"><i class="fas fa-list"></i> Manage Categories</a>
+        <a href="/Suppliers" class="action-btn" style="background: #00b894;"><i class="fas fa-address-book"></i> Manage Suppliers</a>
+    </div>
+</div>
+
+
+<div class="row-dashboard">
+    <div class="col-half">
+        <h3>💰 Revenue Breakdown</h3>
+        <p style="color:#6c757d;">Compared to previous year</p>
+        <div class="revenue-stats">
+            <div>
+                <span class="label">Actual Revenue</span>
+                <span class="value">@Model.TotalSales.ToString("C")</span>
+            </div>
+            <div>
+                <span class="label">Revenue Target</span>
+                <span class="value">$50,000</span>
+            </div>
+            <div>
+                <span class="label">Goal</span>
+                <span class="value">@((Model.TotalSales / 50000 * 100).ToString("F0"))%</span>
+            </div>
+        </div>
+        <canvas id="revenueChart" width="400" height="120"></canvas>
+    </div>
+
+    <div class="col-half">
+        <h3>📌 Segments</h3>
+        <p style="color:#6c757d;">Revenue sources</p>
+        <ul class="segments-list">
+            <li><span class="dot alpha"></span> Alpha (Electronics)</li>
+            <li><span class="dot beta"></span> Beta (Clothing)</li>
+            <li><span class="dot gamma"></span> Gamma (Books)</li>
+            <li><span class="dot delta"></span> Delta (Home Appliances)</li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="orders-section">
+    <div class="section-header">
+        <h3>📋 Recent Orders</h3>
+        <a href="/Sales" class="view-all-link" style="color: #4facfe;">
+            View All <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+    <table class="orders-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Amount</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var recentSales = ViewBag.RecentSales as List<SaleViewModel> ?? new List<SaleViewModel>();
+            }
+            @foreach (var item in recentSales.Take(10))
+            {
+                var statuses = new[] { "processing", "completed", "failed" };
+                var statusLabels = new[] { "Processing", "Completed", "Failed" };
+                var rnd = new Random();
+                var statusIndex = rnd.Next(0, 3);
+                <tr>
+                    <td>@item.SaleDate.ToString("yyyy/MM/dd")</td>
+                    <td>@item.SaleID</td>
+                    <td>@item.CustomerInfo</td>
+                    <td>@item.TotalAmount.ToString("C")</td>
+                    <td><span class="status @statuses[statusIndex]">@statusLabels[statusIndex]</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<div class="orders-section" style="margin-top: 20px;">
+    <div class="section-header">
+        <h3>🛒 Recent Purchases</h3>
+        <a href="/Purchases" class="view-all-link" style="color: #43e97b;">
+            View All <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+    <table class="orders-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Purchase #</th>
+                <th>Supplier</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var recentPurchases = ViewBag.RecentPurchases as List<PurchaseViewModel> ?? new List<PurchaseViewModel>();
+            }
+            @foreach (var item in recentPurchases.Take(5))
+            {
+                <tr>
+                    <td>@item.PurchaseDate.ToString("yyyy/MM/dd")</td>
+                    <td>@item.PurchaseID</td>
+                    <td>@item.SupplierName</td>
+                    <td>@item.TotalAmount.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<div class="orders-section" style="margin-top: 20px;">
+    <div class="section-header">
+        <h3>⚠️ Low Stock Products</h3>
+        <a href="/Products" class="view-all-link" style="color: #f5576c;">
+            View All <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+    <table class="orders-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>SKU</th>
+                <th>Current Stock</th>
+                <th>Threshold</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var lowStockProducts = ViewBag.LowStockProducts as List<ProductViewModel> ?? new List<ProductViewModel>();
+            }
+            @foreach (var item in lowStockProducts.Take(5))
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.SKU</td>
+                    <td style="color: #dc3545; font-weight: 700;">@item.StockQuantity</td>
+                    <td>@item.LowStockThreshold</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [12000, 19000, 3000, 5000, 20000, 30000],
+                        backgroundColor: 'rgba(79, 172, 254, 0.6)',
+                        borderColor: 'rgba(79, 172, 254, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        });
+    </script>
+}
